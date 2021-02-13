@@ -30,7 +30,7 @@
             <span>Entradas</span>
             <img src="./assets/income.svg" alt="Imagem de entradas"> 
           </h3>
-          <p id="incomeDisplay">R$ 5.000,00</p>
+          <p id="incomeDisplay">R$ 0,00</p>
         </div>
         
         <div class="card">
@@ -38,7 +38,7 @@
             <span>Saídas</span>
             <img src="./assets/expense.svg" alt="Imagem de saídas"> 
           </h3>
-          <p id="expenseDisplay">R$ 2.000,00</p>
+          <p id="expenseDisplay">R$ 0,00</p>
         </div> 
         
         <div class="card total">
@@ -46,14 +46,14 @@
             <span>Total</span>
             <img src="./assets/total.svg" alt="Imagem de total"> 
           </h3>
-          <p id="totalDisplay">R$ 3.000,00</p>
+          <p id="totalDisplay">R$ 0,00</p>
         </div>     
       </section>
       
       <section id="transaction">
         <h2 class="sr-only">Transações</h2>
 
-        <a href="#" class="button new" onclick="Modal.openClose()">+ Nova Transação</a>
+        <a href="#" class="button new" onclick="Modal.open()">+ Nova Transação</a>
 
         <table id="data-table">
           <thead>
@@ -75,7 +75,7 @@
       <div class="modal"> <!-- caixa branca -->
         <div id="form">
           <h2>Nova Transação</h2>
-          <form action="">
+          <form action="#" onsubmit="Form.submit(event)">
             <div class="input-group">
               <label class="sr-only" for="description">Descrição</label>
               <input type="text" id="description" name="description" placeholder="Descrição">
@@ -89,11 +89,11 @@
 
             <div class="input-group">
               <label class="sr-only" for="date">Data</label>
-              <input type="date" id="date" name="date">
+              <input type="date" id="date" name="date"> 
             </div>
 
             <div class="input-group actions">
-              <a href="#" class="button cancel" onclick="Modal.openClose()">Cancelar</a>
+              <a href="#" class="button cancel" onclick="Modal.close()">Cancelar</a>
               <button type="submit">Salvar</button>
             </div>
           </form>
