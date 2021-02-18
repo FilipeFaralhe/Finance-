@@ -1,0 +1,59 @@
+#transaction {
+    display: block; /* encaixou na lagura de 100%*/
+    width: 100%;
+
+    overflow-x: auto; /*quando foi necessário cria um scroll no eixo x da tabela*/
+}
+
+table#data-table {
+    width: 100%; /* pega 100% do espaço da caixa onde a table está dentro*/
+    border-spacing: 0 0.25rem; /* controla os espaçamentos entre os elementos da tabela p=eixo vertical s=eixo horizontal*/
+    color: var(--color-strings);
+}
+
+table thead tr th:first-child,
+table tbody tr td:first-child{
+    border-radius: 0.25rem 0 0 0.25rem;
+}
+
+table thead tr th:last-child,
+table tbody tr td:last-child {
+    border-radius: 0 0.25rem 0.25rem 0;
+}
+
+table tbody tr {
+    opacity: 0.7;
+}
+
+table tbody tr:hover {
+    opacity: 1;
+}
+
+table#data-table thead th {
+    background: var(--color-cardstable);
+    font-weight: normal;
+    padding: 1rem 2rem;
+    text-align: left;
+}
+
+table#data-table tbody td {
+    background: var(--color-cardstable);
+    padding: 1rem 2rem;
+    font-weight: normal;
+}
+
+td.income {
+    color: var(--light-green);
+}
+
+td.expense {
+    color: #e92929;
+}
+
+img.remove {
+    cursor: pointer;
+}
+
+img.edite {
+    cursor: pointer;
+}

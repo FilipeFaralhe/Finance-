@@ -1,0 +1,6 @@
+h2 {
+    margin: 3.2rem 0 0.8rem;
+    color: var(--color-strings);
+  
+    font-weight: normal; /* 400 */
+}

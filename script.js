@@ -1,11 +1,71 @@
 const Modal = {
-  open() {
+  open(event) {
+    const buttonNewTransction = document.querySelector(".button, .new");
+    let submitOrEdite;
+    let title;
+
+    if(event.currentTarget === buttonNewTransction) {
+      submitOrEdite = "FormSubmit.submit(event)";
+      title = "Nova Transação";
+      this.addModal(title, submitOrEdite);
+    } else {
+      submitOrEdite = "FormEdite.submit(event)";
+      title = "Editar Transação";
+      this.addModal(title, submitOrEdite);
+    }
+
+    console.log("oiiii");
     document.querySelector('.modal-overlay').classList.add('active');
   },
   
   close() {
-    document.querySelector('.modal-overlay').classList.remove('active'); 
-  }
+    this.remove()
+  },
+
+  remove() {
+    const modal = document.querySelector('.modal-overlay');
+    modal.remove();
+  },
+
+  addModal(title, submitOrEdite) {
+    console.log("oii");
+    const modalOverlay = document.createElement('div');
+    modalOverlay.classList.add("modal-overlay")
+    const body = document.querySelector('body');
+    const footer = document.querySelector('footer');
+
+    const html = `
+      <div class="modal"> 
+        <div id="form">
+          <h2>${title}</h2>
+          <form action="#" onsubmit="${submitOrEdite}">
+            <div class="input-group">
+              <label class="sr-only" for="description">Descrição</label>
+              <input type="text" id="description" name="description" placeholder="Descrição">
+            </div>
+            
+            <div class="input-group">
+              <label class="sr-only" for="amount">Valor</label>
+              <input type="number" step="0.01" id="amount" name="amount" placeholder="0,00">
+              <small>Use o sinal - (negativo) para despesas e, (vírgula) para casas decimais</small>
+            </div>
+
+            <div class="input-group">
+              <label class="sr-only" for="date">Data</label>
+              <input type="date" id="date" name="date"> 
+            </div>
+
+            <div class="input-group actions">
+              <a href="#" class="button cancel" onclick="Modal.close()">Cancelar</a>
+              <button type="submit">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      `
+    modalOverlay.innerHTML = html;
+    body.insertBefore(modalOverlay, footer);
+  } 
 }
 
 const Storage = {
@@ -47,6 +107,23 @@ const Transaction = {
     this.all.splice(index, 1);
 
     App.reload();
+  },
+
+  edite(index) {
+    const description = this.all[index].description;
+    const amount = this.all[index].amount;
+    const date = this.all[index].date;
+    
+    const inputDescription = document.querySelector("input#description");
+    const inputAmount = document.querySelector("input#amount");
+    const inputDate = document.querySelector("input#date");
+    
+    
+    inputDescription.value = description;
+    inputAmount.value = Utils.formatCurrencyNormal(amount);
+    inputDate.value = Utils.formateDateNormal(date);
+
+    FormEdite.saveIndex(index);
   },
 
   incomes() {
@@ -162,6 +239,9 @@ const DOM = {
       <td class="${incomeOrExpanse}">${amount}</td>
       <td class="date">${transactions.date}</td>
       <td>
+        <i class="fas fa-edit" class="edite"  alt="editar transação" onclick="Modal.open(event); Transaction.edite(${index});"></i>
+      </td>
+      <td>
         <img class="remove" src="./assets/minus.svg" alt="remover transação" onclick="Transaction.remove(${index})">
       </td>
     `;
@@ -203,8 +283,26 @@ const Utils = {
     return signal + " " + amount;
   },
 
+  formatCurrencyNormal(amount) {
+    const signal = Number(amount) < 0 ? "-" : "";
+    
+    // Expressão regular /\D/g onde g significa global, \D siginifica achar tudo que não é número
+    amount = String(amount).replace(/\D/g, "");// tira o sinal "-" 
+
+    // transformando em valor quebrado
+    amount = Number(amount) / 100;
+
+    return signal + amount;
+  },
+
   formatDate(date) {
     date = date.split('-').reverse().join("/");
+
+    return date;
+  },
+
+  formateDateNormal(date) {
+    date = date.split("/").reverse().join('-');
 
     return date;
   }
@@ -230,19 +328,60 @@ const App = {
   }
 }
 
-const Form = {
-  description: document.querySelector('input#description'),
-  amount: document.querySelector('input#amount'),
-  date: document.querySelector("input#date"),
+const FormEdite = {
+  getIndex: 0,
 
-  getValues() {
-    return {
-      description: this.description.value,
-      amount: this.amount.value,
-      date: this.date.value
-    }
+  saveIndex(index) {
+    this.getIndex = index
   },
 
+  editorTransaction() {
+    const {description, amount, date} = FormSubmit.getValues();
+    console.log(description);
+    Transaction.all[this.getIndex].description = description;
+    Transaction.all[this.getIndex].amount = amount;
+    Transaction.all[this.getIndex].date = date;
+    Transaction.all[this.getIndex] = FormSubmit.formatValues();
+  },
+
+  submit(event) {
+    const modalOverlay = document.querySelector(".modal-overlay");
+    const body = document.querySelector("body");
+    
+    try {
+
+      event.preventDefault();
+      FormSubmit.validateFilds();
+      this.editorTransaction();
+      Modal.close();
+      App.reload();
+      body.appendChild(this.messageSuccess())
+      FormSubmit.removeMessageSuccess();
+
+    } catch(error) {
+
+      modalOverlay.appendChild(FormSubmit.messageError());
+      FormSubmit.removeMessageError();
+    }  
+  },
+  
+  messageSuccess() {
+    const message = document.createElement('div');
+    message.setAttribute("id", "success")
+    message.innerHTML = '<p>Transação editada com sucesso!</p>'
+    
+    return message;
+  },
+}
+
+const FormSubmit = {
+  getValues() {
+    return {
+      description: document.querySelector("input#description").value,
+      amount: document.querySelector("input#amount").value,
+      date: document.querySelector("input#date").value
+    }
+  },
 
   validateFilds() {
     const { description, amount, date } = this.getValues();
@@ -273,32 +412,79 @@ const Form = {
   },
 
   clearFilds() {
-    this.description.value = "";
-    this.amount.value = "";
-    this.date.value = "";
+    document.querySelector("input#description").value = "";
+    document.querySelector("input#amount").value = "";
+    document.querySelector("input#date").value = "";
   },
 
   submit(event) {
+    const modalOverlay = document.querySelector(".modal-overlay");
+    const body = document.querySelector("body");
     event.preventDefault();
     
     try {
-      //validando os campos
+
       this.validateFilds();
-      
       const newTransaction = this.formatValues();
       this.saveTransaction(newTransaction);
       this.clearFilds();
       Modal.close();
+      body.appendChild(this.messageSuccess())
+      this.removeMessageSuccess();
 
     } catch (error) {
-      alert(error.message);
-    }
 
-    
-  
+      modalOverlay.appendChild(this.messageError());
+      this.removeMessageError();
+
+    }
   },
+
+  messageSuccess() {
+    const message = document.createElement('div');
+    message.setAttribute("id", "success")
+    message.innerHTML = '<p>Transação adicionada com sucesso!</p>'
+    
+    return message;
+  },
+
+  messageError() {
+    const message = document.createElement('div');
+    message.setAttribute("id", "nodification")
+    message.innerHTML = '<p>Preencha todos os campos!</p>'
+    
+    return message;
+  },
+
+  removeMessageSuccess() {
+    const success = document.querySelector("#success");
+
+    setTimeout(() => {
+      success.remove();
+    }, 3000);
+  },
+
+  removeMessageError() {
+    const nodification = document.querySelectorAll("#nodification");
+
+    nodification.forEach((nodification, index, array) => {
+      if(array.length == 1){
+      setTimeout(() => {
+        array[0].remove();
+      }, 3000);
+      }else if(array.length >= 2){
+        array[1].remove();
+      }
+    })   
+  }
 }
 
 App.init();
+
+
+
+
+
+
 
 

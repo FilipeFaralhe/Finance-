@@ -1,0 +1,102 @@
+/* Global ====================== */
+/*root é a raiz do html*/
+:root { 
+  --bg-header: #7158e2;
+  --color-strings: #7d5fff;
+  --bg-main: #f1f2f6;
+  --color-cardstable: #ffffff;
+  --default-green: #49aa26;
+  --light-green: #3dd705;
+  --red: #e92929;
+
+  --new-transaction: #7d5fff;
+  --new-hover: #8854d0;
+}
+
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+html {
+  font-size: 93.75%; /* 15px tamanho de font padrão para o mobile*/
+}
+
+body {
+  background: var(--bg-main);
+  font-family: 'Poppins', sans-serif;
+}
+
+.container {
+  width: min(90vw, 800px); /* min calcula qual é o menor valor e aplica o próprio*/
+  margin: auto; /*joga a diferença para o outro lado, centralizando o elemento nas larguras*/
+}
+
+/* trick para esconder elementos, mas deixando os leitores de tela enxergarem*/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+div#success {
+  box-sizing: border-box;
+  position: absolute;
+  width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  top: 6rem;
+  z-index: 99999;
+  padding: 1.3rem 0;
+
+  border-radius: 8px;
+  font-weight: bold;
+
+  color: white;
+  background-color: var(--light-green);
+  animation: showNodification 1s forwards;
+}
+
+div#success p {
+  text-align: center;
+}
+
+i {
+  font-size: 28px;
+  cursor: pointer;
+}
+
+@keyframes showNodification {
+  from {
+      opacity: 0;
+      transform: translate3d(800px, 0, 0);
+  }
+  to {
+      opacity: 1;
+      transform: translate3d(0px, 0, 0);
+  }
+}
+
+/* Responsive ====================== */
+@media (min-width: 800px) {
+  html {
+    font-size: 87.5%; /* 14px */
+  }
+
+  div#success {
+    left: auto;
+    right: 2rem;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}

@@ -5,13 +5,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Finance+</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/components/logo.css">
+  <link rel="stylesheet" href="./css/components/titles.css">
+  <link rel="stylesheet" href="./css/components/buttons.css">
+  <link rel="stylesheet" href="./css/components/header.css">
+  <link rel="stylesheet" href="./css/components/balance.css">
+  <link rel="stylesheet" href="./css/components/card.css">
+  <link rel="stylesheet" href="./css/components/table.css">
+  <link rel="stylesheet" href="./css/components/footer.css">
+  <link rel="stylesheet" href="./css/components/modal.css">
+  <link rel="stylesheet" href="./css/components/form.css">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,700;1,100;1,200;1,400;1,700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/82a31cca79.js" crossorigin="anonymous"></script>
 </head>
   <body>
-    
-    <header class="">
+    <header>
       <div class="toggle">
         <input id="swtich" type="checkbox" name="theme">
         <label for="swtich"></label>
@@ -25,7 +35,7 @@
       <section id="balance">
         <h2 class="sr-only">Balanço</h2>
         
-        <div class="card">
+        <div class="card income">
           <h3>
             <span>Entradas</span>
             <img src="./assets/income.svg" alt="Imagem de entradas"> 
@@ -33,7 +43,7 @@
           <p id="incomeDisplay">R$ 0,00</p>
         </div>
         
-        <div class="card">
+        <div class="card expense">
           <h3>
             <span>Saídas</span>
             <img src="./assets/expense.svg" alt="Imagem de saídas"> 
@@ -53,7 +63,7 @@
       <section id="transaction">
         <h2 class="sr-only">Transações</h2>
 
-        <a href="#" class="button new" onclick="Modal.open()">+ Nova Transação</a>
+        <a href="#" class="button new" onclick="Modal.open(event)">+ Nova Transação</a>
 
         <table id="data-table">
           <thead>
@@ -61,7 +71,8 @@
               <th>Descrição</th>
               <th>Valor</th>
               <th>Data</th>
-              <th></th>
+              <th>Editar</th>
+              <th>Remover</th>
             </tr>
           </thead>
           <tbody>
@@ -71,36 +82,6 @@
       </section>
     </main>
     
-    <div class="modal-overlay"> <!-- caixa transparente-->
-      <div class="modal"> <!-- caixa branca -->
-        <div id="form">
-          <h2>Nova Transação</h2>
-          <form action="#" onsubmit="Form.submit(event)">
-            <div class="input-group">
-              <label class="sr-only" for="description">Descrição</label>
-              <input type="text" id="description" name="description" placeholder="Descrição">
-            </div>
-            
-            <div class="input-group">
-              <label class="sr-only" for="amount">Valor</label>
-              <input type="number" step="0.01" id="amount" name="amount" placeholder="0,00">
-              <small>Use o sinal - (negativo) para despesas e, (vírgula) para casas decimais</samll>
-            </div>
-
-            <div class="input-group">
-              <label class="sr-only" for="date">Data</label>
-              <input type="date" id="date" name="date"> 
-            </div>
-
-            <div class="input-group actions">
-              <a href="#" class="button cancel" onclick="Modal.close()">Cancelar</a>
-              <button type="submit">Salvar</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
     <footer>
       <p>2021 Finance+</p>
     </footer>
